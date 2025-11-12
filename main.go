@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	"fmt"
+	//"fmt"
 	"encoding/json"
 	"github.com/senodp/go-rest-api/database"
 	"github.com/labstack/echo"
@@ -29,7 +29,15 @@ func main(){
 		var request CreateRequest
 		json.NewDecoder(ctx.Request().Body).Decode(&request)
 
-		fmt.Println(request)
+		_, err := db.Exec(
+			"INSERT INTO todolist (title, description, done) VALUES (?, ?, 0)",
+			request.Title,
+			request.Description,
+		)
+		if err != nil{
+			return ctx.String(http.StatusInternalServerError, err.Error())
+		}
+		// fmt.Println(request)
 
 		return ctx.String(http.StatusOK, "OK")
 	})
