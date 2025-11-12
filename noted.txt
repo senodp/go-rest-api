@@ -1,0 +1,5 @@
+Setup import framework Echo
+- go get github.com/labstack/echo
+
+Create database di localhost/phpmyadmin
+- nama database : todolist
