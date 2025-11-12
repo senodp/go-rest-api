@@ -13,6 +13,11 @@ type CreateRequest struct{
 	Description 	string `json:"description"`
 }
 
+type UpdateRequest struct{
+	Title 			string `json:"title"`
+	Description 	string `json:"description"`
+}
+
 type TodoResponse struct{
 	Id 				int 	`json:"id"`
 	Title 			string 	`json:"title"`
@@ -94,6 +99,28 @@ func main(){
 
 		_, err := db.Exec(
 			"DELETE FROM todolist WHERE id = ?",
+			id,
+		)
+		if err != nil{
+			return ctx.String(http.StatusInternalServerError, err.Error())
+		}
+		// fmt.Println(request)
+
+		return ctx.String(http.StatusOK, "OK")
+	})
+
+	e.PATCH("/todo/:id", func(ctx echo.Context)error{
+
+		//ambil data id
+		id := ctx.Param("id")
+
+		var request UpdateRequest
+		json.NewDecoder(ctx.Request().Body).Decode(&request)
+
+		_, err := db.Exec(
+			"UPDATE todolist SET title = ?, description = ? WHERE id = ?",
+			request.Title,
+			request.Description,
 			id,
 		)
 		if err != nil{
