@@ -84,5 +84,25 @@ func main(){
 		return ctx.String(http.StatusOK, "OK")
 	})
 
+	e.DELETE("/todo/:id", func(ctx echo.Context)error{
+
+		//ambil data id
+		id := ctx.Param("id")
+
+		var request CreateRequest
+		json.NewDecoder(ctx.Request().Body).Decode(&request)
+
+		_, err := db.Exec(
+			"DELETE FROM todolist WHERE id = ?",
+			id,
+		)
+		if err != nil{
+			return ctx.String(http.StatusInternalServerError, err.Error())
+		}
+		// fmt.Println(request)
+
+		return ctx.String(http.StatusOK, "OK")
+	})
+
 	e.Start(":8080")
 }
